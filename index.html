@@ -1,0 +1,2429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Mbekilabs — AI-powered music, video and educational content. One label. Three channels. Infinite output.">
+  <title>MBEKILABS — One Label. Infinite Output.</title>
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&display=swap');
+
+    :root {
+      --black: #07070f;
+      --black2: #0d0d18;
+      --white: #ededf5;
+      --white2: #c8c8d8;
+      --waves: #4d96ff;
+      --motion: #ff6b6b;
+      --mind: #6bcb77;
+      --gold: #ffd93d;
+      --royal: #c77dff;
+      --dim: rgba(237, 237, 245, 0.06);
+      --dim2: rgba(237, 237, 245, 0.03);
+      --dim3: rgba(237, 237, 245, 0.01);
+      --border: rgba(237, 237, 245, 0.08);
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--white);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, background 0.2s;
+      mix-blend-mode: difference;
+    }
+
+    .cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(237, 237, 245, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.12s ease;
+    }
+
+    body:hover .cursor {
+      opacity: 1;
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9990;
+      opacity: 0.4;
+    }
+
+    /* ========== NAV ========== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(7, 7, 15, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--waves), var(--royal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(237, 237, 245, 0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    .nav-cta {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      padding: 8px 20px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .nav-cta:hover {
+      opacity: 0.8;
+    }
+
+    .nav-mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* ========== HERO ========== */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 60%, rgba(77, 150, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 30%, rgba(199, 125, 255, 0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 90%, rgba(107, 203, 119, 0.05) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    /* Animated prism beams */
+    .prism-beams {
+      position: absolute;
+      right: -100px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 600px;
+      height: 600px;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .beam {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: 2px;
+      transform-origin: left center;
+      border-radius: 2px;
+      animation: beamPulse 3s ease-in-out infinite;
+    }
+
+    .beam:nth-child(1) {
+      width: 280px;
+      background: var(--waves);
+      transform: rotate(-20deg);
+      animation-delay: 0s;
+    }
+
+    .beam:nth-child(2) {
+      width: 320px;
+      background: var(--royal);
+      transform: rotate(-5deg);
+      animation-delay: 0.3s;
+    }
+
+    .beam:nth-child(3) {
+      width: 350px;
+      background: var(--motion);
+      transform: rotate(10deg);
+      animation-delay: 0.6s;
+    }
+
+    .beam:nth-child(4) {
+      width: 300px;
+      background: var(--gold);
+      transform: rotate(25deg);
+      animation-delay: 0.9s;
+    }
+
+    .beam:nth-child(5) {
+      width: 260px;
+      background: var(--mind);
+      transform: rotate(40deg);
+      animation-delay: 1.2s;
+    }
+
+    @keyframes beamPulse {
+
+      0%,
+      100% {
+        opacity: 0.6;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: rgba(237, 237, 245, 0.35);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeUp 1s 0.1s both;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      width: 32px;
+      height: 1px;
+      background: rgba(237, 237, 245, 0.25);
+    }
+
+    .hero-title {
+      font-size: clamp(52px, 10vw, 110px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
+      margin-bottom: 32px;
+      animation: fadeUp 1s 0.2s both;
+    }
+
+    .hero-title .line1 {
+      display: block;
+      color: var(--white);
+    }
+
+    .hero-title .line2 {
+      display: block;
+      background: linear-gradient(90deg, var(--waves) 0%, var(--royal) 40%, var(--motion) 70%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200%;
+      animation: fadeUp 1s 0.2s both, gradientShift 4s ease infinite;
+    }
+
+    @keyframes gradientShift {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .hero-sub {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(16px, 2vw, 22px);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(237, 237, 245, 0.55);
+      max-width: 560px;
+      line-height: 1.6;
+      margin-bottom: 48px;
+      animation: fadeUp 1s 0.35s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 1s 0.5s both;
+    }
+
+    .btn-primary {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      padding: 14px 32px;
+      text-decoration: none;
+      display: inline-block;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: transparent;
+      padding: 14px 32px;
+      text-decoration: none;
+      display: inline-block;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(237, 237, 245, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* Hero stats */
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 1s 0.65s both;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {}
+
+    .stat-val {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .stat-val.c1 {
+      color: var(--waves);
+    }
+
+    .stat-val.c2 {
+      color: var(--motion);
+    }
+
+    .stat-val.c3 {
+      color: var(--mind);
+    }
+
+    .stat-val.c4 {
+      color: var(--gold);
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: rgba(237, 237, 245, 0.3);
+      text-transform: uppercase;
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: fadeUp 1s 0.8s both;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, rgba(237, 237, 245, 0.3));
+      animation: scrollPulse 2s ease infinite;
+    }
+
+    @keyframes scrollPulse {
+
+      0%,
+      100% {
+        transform: scaleY(1);
+        opacity: 0.5;
+      }
+
+      50% {
+        transform: scaleY(1.2);
+        opacity: 1;
+      }
+    }
+
+    .scroll-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: rgba(237, 237, 245, 0.2);
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+
+    /* ========== SECTION BASE ========== */
+    section {
+      padding: 120px 40px;
+      position: relative;
+    }
+
+    .section-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: rgba(237, 237, 245, 0.25);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-tag::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: rgba(237, 237, 245, 0.2);
+    }
+
+    .section-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+
+    .section-body {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(237, 237, 245, 0.5);
+      line-height: 1.7;
+      max-width: 540px;
+    }
+
+    /* ========== ABOUT / MISSION ========== */
+    #about {
+      background: var(--black2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .about-visual {
+      position: relative;
+      height: 420px;
+    }
+
+    .prism-shape {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .prism-triangle {
+      width: 0;
+      height: 0;
+      border-left: 120px solid transparent;
+      border-right: 120px solid transparent;
+      border-bottom: 208px solid rgba(237, 237, 245, 0.04);
+      position: relative;
+    }
+
+    .prism-triangle::after {
+      content: '';
+      position: absolute;
+      left: -118px;
+      top: 4px;
+      width: 0;
+      height: 0;
+      border-left: 118px solid transparent;
+      border-right: 118px solid transparent;
+      border-bottom: 204px solid rgba(237, 237, 245, 0.03);
+    }
+
+    .orbit {
+      position: absolute;
+      border: 1px solid;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      animation: spin linear infinite;
+    }
+
+    .orbit-1 {
+      width: 220px;
+      height: 220px;
+      margin: -110px 0 0 -110px;
+      border-color: rgba(77, 150, 255, 0.15);
+      animation-duration: 20s;
+    }
+
+    .orbit-2 {
+      width: 300px;
+      height: 300px;
+      margin: -150px 0 0 -150px;
+      border-color: rgba(199, 125, 255, 0.1);
+      animation-duration: 30s;
+      animation-direction: reverse;
+    }
+
+    .orbit-3 {
+      width: 380px;
+      height: 380px;
+      margin: -190px 0 0 -190px;
+      border-color: rgba(107, 203, 119, 0.07);
+      animation-duration: 45s;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .orbit-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      top: -4px;
+      left: 50%;
+      margin-left: -4px;
+    }
+
+    .orbit-1 .orbit-dot {
+      background: var(--waves);
+      box-shadow: 0 0 12px var(--waves);
+    }
+
+    .orbit-2 .orbit-dot {
+      background: var(--royal);
+      box-shadow: 0 0 12px var(--royal);
+    }
+
+    .orbit-3 .orbit-dot {
+      background: var(--mind);
+      box-shadow: 0 0 12px var(--mind);
+    }
+
+    .center-mark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      background: var(--white);
+      border-radius: 50%;
+      box-shadow: 0 0 24px rgba(237, 237, 245, 0.4);
+    }
+
+    .about-text {
+      max-width: 480px;
+    }
+
+    .about-text .section-title {
+      margin-bottom: 24px;
+    }
+
+    .about-statement {
+      font-size: 16px;
+      line-height: 1.8;
+      color: rgba(237, 237, 245, 0.6);
+      margin-bottom: 32px;
+    }
+
+    .about-statement strong {
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    .values-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .value-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--dim2);
+      border: 1px solid var(--border);
+    }
+
+    .value-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    .value-item:nth-child(1) .value-dot {
+      background: var(--waves);
+    }
+
+    .value-item:nth-child(2) .value-dot {
+      background: var(--motion);
+    }
+
+    .value-item:nth-child(3) .value-dot {
+      background: var(--mind);
+    }
+
+    .value-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .value-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: rgba(237, 237, 245, 0.35);
+      line-height: 1.6;
+    }
+
+    /* ========== CHANNELS ========== */
+    #channels {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .channels-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 64px;
+      align-items: end;
+    }
+
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .channel-card {
+      background: var(--dim2);
+      border: 1px solid var(--border);
+      padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s;
+      cursor: default;
+    }
+
+    .channel-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .channel-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+    }
+
+    .channel-card.waves {
+      border-color: rgba(77, 150, 255, 0.1);
+    }
+
+    .channel-card.waves::before {
+      background: var(--waves);
+    }
+
+    .channel-card.waves:hover {
+      border-color: rgba(77, 150, 255, 0.25);
+    }
+
+    .channel-card.motion {
+      border-color: rgba(255, 107, 107, 0.1);
+    }
+
+    .channel-card.motion::before {
+      background: var(--motion);
+    }
+
+    .channel-card.motion:hover {
+      border-color: rgba(255, 107, 107, 0.25);
+    }
+
+    .channel-card.mind {
+      border-color: rgba(107, 203, 119, 0.1);
+    }
+
+    .channel-card.mind::before {
+      background: var(--mind);
+    }
+
+    .channel-card.mind:hover {
+      border-color: rgba(107, 203, 119, 0.25);
+    }
+
+    .channel-bg-letter {
+      position: absolute;
+      right: -10px;
+      bottom: -20px;
+      font-size: 120px;
+      font-weight: 800;
+      line-height: 1;
+      opacity: 0.03;
+      letter-spacing: -0.05em;
+    }
+
+    .channel-icon {
+      font-size: 32px;
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .channel-name {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .channel-parent {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .waves .channel-parent {
+      color: rgba(77, 150, 255, 0.5);
+    }
+
+    .motion .channel-parent {
+      color: rgba(255, 107, 107, 0.5);
+    }
+
+    .mind .channel-parent {
+      color: rgba(107, 203, 119, 0.5);
+    }
+
+    .channel-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(237, 237, 245, 0.5);
+      margin-bottom: 28px;
+    }
+
+    .channel-features {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .channel-feature {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: rgba(237, 237, 245, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .channel-feature::before {
+      content: '—';
+      opacity: 0.4;
+    }
+
+    .channel-platforms {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .platform-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      color: rgba(237, 237, 245, 0.3);
+    }
+
+    /* ========== ROADMAP SECTION ========== */
+    #roadmap {
+      background: var(--black2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .roadmap-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .roadmap-header {
+      margin-bottom: 64px;
+    }
+
+    .roadmap-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+
+    .timeline-year {
+      background: var(--black2);
+      padding: 32px 24px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .timeline-year:hover,
+    .timeline-year.active {
+      background: var(--dim);
+    }
+
+    .timeline-year.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+    }
+
+    .timeline-year:nth-child(1).active::after {
+      background: var(--motion);
+    }
+
+    .timeline-year:nth-child(2).active::after {
+      background: var(--waves);
+    }
+
+    .timeline-year:nth-child(3).active::after {
+      background: var(--gold);
+    }
+
+    .timeline-year:nth-child(4).active::after {
+      background: var(--royal);
+    }
+
+    .year-num {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 8px;
+      opacity: 0.15;
+      transition: opacity 0.2s;
+    }
+
+    .timeline-year.active .year-num,
+    .timeline-year:hover .year-num {
+      opacity: 1;
+    }
+
+    .timeline-year:nth-child(1) .year-num {
+      color: var(--motion);
+    }
+
+    .timeline-year:nth-child(2) .year-num {
+      color: var(--waves);
+    }
+
+    .timeline-year:nth-child(3) .year-num {
+      color: var(--gold);
+    }
+
+    .timeline-year:nth-child(4) .year-num {
+      color: var(--royal);
+    }
+
+    .year-theme {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .year-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: rgba(237, 237, 245, 0.3);
+      letter-spacing: 0.1em;
+    }
+
+    .roadmap-panels {
+      position: relative;
+    }
+
+    .roadmap-panel {
+      display: none;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .roadmap-panel.active {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .roadmap-item {
+      padding: 24px;
+      border: 1px solid var(--border);
+      background: var(--dim2);
+    }
+
+    .roadmap-item-icon {
+      font-size: 18px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .roadmap-item-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .roadmap-item-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: rgba(237, 237, 245, 0.35);
+      line-height: 1.6;
+    }
+
+    /* ========== PHILOSOPHY ========== */
+    #philosophy {
+      text-align: center;
+      padding: 160px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .philosophy-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(199, 125, 255, 0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .philosophy-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .philosophy-quote {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.3;
+      color: rgba(237, 237, 245, 0.8);
+      margin-bottom: 40px;
+    }
+
+    .philosophy-quote em {
+      font-style: normal;
+      color: var(--white);
+      font-weight: 300;
+    }
+
+    .philosophy-pillars {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 60px;
+    }
+
+    .pillar-chip {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border: 1px solid var(--border);
+      color: rgba(237, 237, 245, 0.4);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .pillar-chip:hover {
+      border-color: rgba(237, 237, 245, 0.25);
+      color: var(--white);
+    }
+
+    /* ========== INVEST ========== */
+    #invest {
+      background: var(--black2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .invest-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .invest-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .invest-left .section-title {
+      margin-bottom: 24px;
+    }
+
+    .invest-statement {
+      font-size: 15px;
+      line-height: 1.8;
+      color: rgba(237, 237, 245, 0.55);
+      margin-bottom: 40px;
+    }
+
+    .invest-statement strong {
+      color: var(--white);
+    }
+
+    .opportunity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .opportunity-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--dim2);
+      border: 1px solid var(--border);
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .opportunity-item:hover {
+      background: var(--dim);
+      border-color: rgba(237, 237, 245, 0.12);
+    }
+
+    .opp-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .opp-text {
+      font-size: 13px;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .opp-arrow {
+      color: rgba(237, 237, 245, 0.2);
+      font-size: 12px;
+    }
+
+    /* Revenue streams */
+    .revenue-display {}
+
+    .rev-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(237, 237, 245, 0.25);
+      margin-bottom: 20px;
+    }
+
+    .revenue-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .rev-bar-item {}
+
+    .rev-bar-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .rev-name {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .rev-channel {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: rgba(237, 237, 245, 0.3);
+    }
+
+    .rev-bar-track {
+      height: 3px;
+      background: var(--dim);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .rev-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      animation: barGrow 1.5s ease both;
+    }
+
+    @keyframes barGrow {
+      from {
+        width: 0;
+      }
+    }
+
+    /* ========== CONTACT ========== */
+    #contact {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-left .section-title {
+      margin-bottom: 16px;
+    }
+
+    .contact-left .section-body {
+      margin-bottom: 48px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--white);
+      transition: background 0.2s, border-color 0.2s;
+      background: var(--dim2);
+    }
+
+    .contact-link:hover {
+      background: var(--dim);
+      border-color: rgba(237, 237, 245, 0.15);
+    }
+
+    .contact-link-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .contact-link-handle {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: rgba(237, 237, 245, 0.35);
+    }
+
+    .contact-link-arrow {
+      font-size: 14px;
+      color: rgba(237, 237, 245, 0.2);
+    }
+
+    /* Contact form */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(237, 237, 245, 0.3);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: var(--dim2);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+      appearance: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: rgba(237, 237, 245, 0.25);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: rgba(237, 237, 245, 0.2);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-select {
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background: var(--black2);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-submit {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      padding: 16px 32px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .form-submit:hover {
+      opacity: 0.85;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      padding: 64px 40px 40px;
+      border-top: 1px solid var(--border);
+      background: var(--black2);
+    }
+
+    .footer-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand {}
+
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      background: linear-gradient(90deg, var(--waves), var(--royal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .footer-tagline {
+      font-family: 'Fraunces', serif;
+      font-size: 14px;
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(237, 237, 245, 0.35);
+      line-height: 1.6;
+      max-width: 260px;
+      margin-bottom: 24px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-link {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      text-decoration: none;
+      color: rgba(237, 237, 245, 0.4);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .social-link:hover {
+      border-color: rgba(237, 237, 245, 0.25);
+      color: var(--white);
+    }
+
+    .footer-col-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(237, 237, 245, 0.25);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: rgba(237, 237, 245, 0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-link:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(237, 237, 245, 0.2);
+    }
+
+    .footer-motto {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(237, 237, 245, 0.15);
+      text-transform: uppercase;
+    }
+
+    /* Channel colors in footer */
+    .c-waves {
+      color: var(--waves);
+    }
+
+    .c-motion {
+      color: var(--motion);
+    }
+
+    .c-mind {
+      color: var(--mind);
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 900px) {
+      nav {
+        padding: 0 20px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-mobile-toggle {
+        display: block;
+      }
+
+      section {
+        padding: 80px 20px;
+      }
+
+      #home {
+        padding: 100px 20px 60px;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .about-visual {
+        height: 240px;
+      }
+
+      .channels-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .channels-header {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .roadmap-timeline {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .roadmap-panel.active {
+        grid-template-columns: 1fr;
+      }
+
+      .invest-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+
+      .prism-beams {
+        display: none;
+      }
+
+      .hero-stats {
+        gap: 24px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .roadmap-timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        cursor: auto;
+      }
+
+      .cursor,
+      .cursor-ring {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ========== NAV ========== -->
+  <nav>
+    <a href="#home" class="nav-logo">MBEKILABS</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#channels">Channels</a></li>
+      <li><a href="#roadmap">Vision</a></li>
+      <li><a href="#invest">Invest</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Get in Touch</a>
+    <button class="nav-mobile-toggle" onclick="toggleMobileNav()">☰</button>
+  </nav>
+
+  <!-- Mobile Nav Overlay -->
+  <div id="mobileNav"
+    style="display:none; position:fixed; inset:0; background:rgba(7,7,15,0.97); z-index:999; flex-direction:column; justify-content:center; align-items:center; gap:32px;">
+    <a href="#about" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
+      onclick="toggleMobileNav()">About</a>
+    <a href="#channels" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
+      onclick="toggleMobileNav()">Channels</a>
+    <a href="#roadmap" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
+      onclick="toggleMobileNav()">Vision</a>
+    <a href="#invest" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
+      onclick="toggleMobileNav()">Invest</a>
+    <a href="#contact" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
+      onclick="toggleMobileNav()">Contact</a>
+    <button onclick="toggleMobileNav()"
+      style="position:absolute; top:20px; right:24px; background:none; border:none; color:var(--white); font-size:24px; cursor:pointer;">✕</button>
+  </div>
+
+  <!-- ========== HERO ========== -->
+  <section id="home">
+    <div class="hero-bg"></div>
+    <div class="prism-beams">
+      <div class="beam"></div>
+      <div class="beam"></div>
+      <div class="beam"></div>
+      <div class="beam"></div>
+      <div class="beam"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">AI-Powered Creative Media Label · Est. 2026</div>
+      <h1 class="hero-title">
+        <span class="line1">ONE LABEL.</span>
+        <span class="line2">INFINITE OUTPUT.</span>
+      </h1>
+      <p class="hero-sub">
+        Mbekilabs is an AI-powered creative label producing music, video and educational content — built for a world
+        where the tools evolve, but the vision never wavers.
+      </p>
+      <div class="hero-actions">
+        <a href="#channels" class="btn-primary">Explore Channels</a>
+        <a href="#invest" class="btn-secondary">Partner With Us</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-val c1">3</div>
+          <div class="stat-label">Active Channels</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val c2">∞</div>
+          <div class="stat-label">Creative Output</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val c3">AI+</div>
+          <div class="stat-label">Powered By</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val c4">4yr</div>
+          <div class="stat-label">Growth Plan</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <div class="scroll-text">Scroll</div>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT ========== -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-visual reveal">
+        <div class="prism-shape">
+          <div class="prism-triangle"></div>
+        </div>
+        <div class="orbit orbit-1">
+          <div class="orbit-dot"></div>
+        </div>
+        <div class="orbit orbit-2">
+          <div class="orbit-dot"></div>
+        </div>
+        <div class="orbit orbit-3">
+          <div class="orbit-dot"></div>
+        </div>
+        <div class="center-mark"></div>
+      </div>
+
+      <div class="about-text reveal">
+        <div class="section-tag">About Mbekilabs</div>
+        <h2 class="section-title">The Strategy Stays.<br />The Tools Evolve.<br />The Brand Compounds.</h2>
+        <p class="about-statement">
+          Mbekilabs is rooted in Kamba African culture — drawing from Mbeve, a traditional form of musical expression.
+          It is not a creator account — it's a <strong>media company built for the AI era.</strong> We produce music,
+          video and educational content across three distinct brands, all operating under one unified label.
+        </p>
+        <p class="about-statement">
+          What sets us apart is simple: <strong>we never marry a single tool.</strong> AI evolves fast. We evolve with
+          it — always deploying the most powerful stack available, always adapting, always ahead.
+        </p>
+
+        <div class="values-list">
+          <div class="value-item">
+            <div class="value-dot"></div>
+            <div>
+              <div class="value-title">Adaptability First</div>
+              <div class="value-desc">New AI tools, new platforms, new formats — we move in 30 days or less.</div>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-dot"></div>
+            <div>
+              <div class="value-title">Content as Proof</div>
+              <div class="value-desc">We don't pitch ideas. We let the content prove the concept and attract what
+                follows.</div>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-dot"></div>
+            <div>
+              <div class="value-title">Built to Last</div>
+              <div class="value-desc">Four-year plan, diversified revenue, global audience. A brand beyond any single
+                trend.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CHANNELS ========== -->
+  <section id="channels" style="max-width:1100px; margin:0 auto; padding:120px 40px;">
+    <div class="channels-header reveal">
+      <div>
+        <div class="section-tag">Our Channels</div>
+        <h2 class="section-title">Three Channels.<br />One Ecosystem.</h2>
+      </div>
+      <p class="section-body">Each brand has its own identity and audience — but together they feed and amplify each
+        other under the Mbekilabs roof.</p>
+    </div>
+
+    <div class="channels-grid">
+      <!-- Mbeve Waves -->
+      <div class="channel-card waves reveal">
+        <div class="channel-bg-letter">MMW</div>
+        <span class="channel-icon">🎵</span>
+        <div class="channel-name">Mbeve Waves</div>
+        <div class="channel-parent">Music · Mbekilabs</div>
+        <p class="channel-desc">AI-generated and AI-assisted music across every genre. From cinematic soundscapes to
+          lo-fi beats — music that creators, brands and listeners actually use.</p>
+        <div class="channel-features">
+          <div class="channel-feature">Original AI music catalogue</div>
+          <div class="channel-feature">Licensing for creators & brands</div>
+          <div class="channel-feature">Music visualizer content</div>
+          <div class="channel-feature">Sync deals & streaming royalties</div>
+        </div>
+        <div class="channel-platforms">
+          <div class="platform-tag">YouTube</div>
+          <div class="platform-tag">Spotify</div>
+          <div class="platform-tag">TikTok</div>
+          <div class="platform-tag">SoundCloud</div>
+        </div>
+      </div>
+
+      <!-- Mbeve Motion -->
+      <div class="channel-card motion reveal">
+        <div class="channel-bg-letter">MM</div>
+        <span class="channel-icon">🎬</span>
+        <div class="channel-name">Mbeve Motion</div>
+        <div class="channel-parent">Video · Mbekilabs</div>
+        <p class="channel-desc">AI-powered short and long form video content. Cinematic visuals, branded storytelling
+          and trending formats — distributed across every major video platform.</p>
+        <div class="channel-features">
+          <div class="channel-feature">Short form AI video content</div>
+          <div class="channel-feature">Cinematic AI visuals & art</div>
+          <div class="channel-feature">Branded content & sponsorships</div>
+          <div class="channel-feature">Ad revenue & brand deals</div>
+        </div>
+        <div class="channel-platforms">
+          <div class="platform-tag">YouTube Shorts</div>
+          <div class="platform-tag">TikTok</div>
+          <div class="platform-tag">Instagram</div>
+          <div class="platform-tag">Reels</div>
+        </div>
+      </div>
+
+      <!-- Mbeve Mind -->
+      <div class="channel-card mind reveal">
+        <div class="channel-bg-letter">E</div>
+        <span class="channel-icon">📚</span>
+        <div class="channel-name">Mbeve Mind</div>
+        <div class="channel-parent">Education · Mbekilabs</div>
+        <p class="channel-desc">Teaching the world how to create with AI. Tutorials, behind-the-scenes, and full courses
+          on AI music, video and content creation — your journey is the curriculum.</p>
+        <div class="channel-features">
+          <div class="channel-feature">AI content creation tutorials</div>
+          <div class="channel-feature">Behind-the-scenes of Mbekilabs</div>
+          <div class="channel-feature">Full course curriculum</div>
+          <div class="channel-feature">Premium community membership</div>
+        </div>
+        <div class="channel-platforms">
+          <div class="platform-tag">YouTube</div>
+          <div class="platform-tag">Teachable</div>
+          <div class="platform-tag">Patreon</div>
+          <div class="platform-tag">LinkedIn</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== VISION ========== -->
+  <section id="roadmap"
+    style="background:var(--black2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div style="max-width:1100px; margin:0 auto; padding:0 40px;">
+
+      <div class="reveal" style="margin-bottom:64px;">
+        <div class="section-tag">Our Vision</div>
+        <h2 class="section-title">Built to Grow.<br />Built to Last.</h2>
+        <p class="section-body" style="margin-top:16px;">Mbekilabs is on a structured journey from creative label to
+          global media institution. Every step is deliberate. Every move is forward.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px;">
+
+        <div class="reveal"
+          style="padding:32px 28px; border:1px solid rgba(255,107,107,0.15); background:rgba(255,107,107,0.03); position:relative; overflow:hidden;">
+          <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:var(--motion);"></div>
+          <div style="font-size:32px; font-weight:800; color:rgba(255,107,107,0.15); margin-bottom:12px;">01</div>
+          <div style="font-size:15px; font-weight:700; margin-bottom:8px;">Foundation</div>
+          <div style="font-family:'DM Mono',monospace; font-size:11px; color:rgba(237,237,245,0.4); line-height:1.7;">
+            Establish the brand. Launch all three channels. Build the audience from zero.</div>
+        </div>
+
+        <div class="reveal"
+          style="padding:32px 28px; border:1px solid rgba(77,150,255,0.15); background:rgba(77,150,255,0.03); position:relative; overflow:hidden;">
+          <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:var(--waves);"></div>
+          <div style="font-size:32px; font-weight:800; color:rgba(77,150,255,0.15); margin-bottom:12px;">02</div>
+          <div style="font-size:15px; font-weight:700; margin-bottom:8px;">Momentum</div>
+          <div style="font-family:'DM Mono',monospace; font-size:11px; color:rgba(237,237,245,0.4); line-height:1.7;">
+            Scale content. Build the team. Open revenue streams. Grow the community.</div>
+        </div>
+
+        <div class="reveal"
+          style="padding:32px 28px; border:1px solid rgba(255,217,61,0.15); background:rgba(255,217,61,0.03); position:relative; overflow:hidden;">
+          <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:var(--gold);"></div>
+          <div style="font-size:32px; font-weight:800; color:rgba(255,217,61,0.15); margin-bottom:12px;">03</div>
+          <div style="font-size:15px; font-weight:700; margin-bottom:8px;">Harvest</div>
+          <div style="font-family:'DM Mono',monospace; font-size:11px; color:rgba(237,237,245,0.4); line-height:1.7;">
+            Diversified revenue. Strategic partnerships. Global audience. Investment ready.</div>
+        </div>
+
+        <div class="reveal"
+          style="padding:32px 28px; border:1px solid rgba(199,125,255,0.15); background:rgba(199,125,255,0.03); position:relative; overflow:hidden;">
+          <div style="position:absolute; top:0; left:0; width:100%; height:3px; background:var(--royal);"></div>
+          <div style="font-size:32px; font-weight:800; color:rgba(199,125,255,0.15); margin-bottom:12px;">04</div>
+          <div style="font-size:15px; font-weight:700; margin-bottom:8px;">Institution</div>
+          <div style="font-family:'DM Mono',monospace; font-size:11px; color:rgba(237,237,245,0.4); line-height:1.7;">
+            Industry authority. Global reach. A legacy that outlasts any single trend or tool.</div>
+        </div>
+
+      </div>
+
+      <div class="reveal"
+        style="margin-top:48px; padding:32px; border:1px solid var(--border); background:var(--dim2); text-align:center;">
+        <p
+          style="font-family:'DM Mono',monospace; font-size:11px; color:rgba(237,237,245,0.25); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:12px;">
+          Our guiding principle</p>
+        <p
+          style="font-family:'Fraunces',serif; font-size:22px; font-weight:300; font-style:italic; color:rgba(237,237,245,0.7); line-height:1.5;">
+          "The strategy stays. The tools evolve.<br />The brand compounds."
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== PHILOSOPHY ========== -->
+  <section id="philosophy">
+    <div class="philosophy-bg"></div>
+    <div class="philosophy-inner reveal">
+      <div class="section-tag" style="justify-content:center;">Our Philosophy</div>
+      <div class="philosophy-quote">
+        "The strategy stays.<br />
+        The tools evolve.<br />
+        <em>The brand compounds.</em>"
+      </div>
+      <p
+        style="font-family:'DM Mono',monospace; font-size:12px; color:rgba(237,237,245,0.25); letter-spacing:0.15em; text-transform:uppercase;">
+        MBEKILABS · CORE BELIEF
+      </p>
+      <div class="philosophy-pillars">
+        <div class="pillar-chip">AI-Powered</div>
+        <div class="pillar-chip">Adaptable by Design</div>
+        <div class="pillar-chip">Content First</div>
+        <div class="pillar-chip">Globally Distributed</div>
+        <div class="pillar-chip">Built to Last</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== INVEST ========== -->
+  <section id="invest">
+    <div class="invest-inner">
+      <div class="invest-grid">
+        <div class="invest-left reveal">
+          <div class="section-tag">Partner & Invest</div>
+          <h2 class="section-title">Good Content<br />Attracts Capital.</h2>
+          <p class="invest-statement">
+            We don't chase investors — we build the proof that makes them come to us. <strong>Mbekilabs is an
+              early-stage AI media company</strong> with a structured growth plan, diversified revenue model and a brand
+            built for the long game.
+          </p>
+          <p class="invest-statement">
+            Whether you're a <strong>brand seeking content partnership</strong>, a <strong>creator looking to
+              collaborate</strong>, or an <strong>investor who sees where AI content is heading</strong> — there's a
+            conversation worth having.
+          </p>
+
+          <div class="opportunity-list">
+            <div class="opportunity-item">
+              <div class="opp-icon">🤝</div>
+              <div class="opp-text">Brand Sponsorships & Partnerships</div>
+              <div class="opp-arrow">→</div>
+            </div>
+            <div class="opportunity-item">
+              <div class="opp-icon">🎵</div>
+              <div class="opp-text">Music Licensing for Creators & Brands</div>
+              <div class="opp-arrow">→</div>
+            </div>
+            <div class="opportunity-item">
+              <div class="opp-icon">📚</div>
+              <div class="opp-text">Educational Content Collaborations</div>
+              <div class="opp-arrow">→</div>
+            </div>
+            <div class="opportunity-item">
+              <div class="opp-icon">💼</div>
+              <div class="opp-text">Investment Conversations</div>
+              <div class="opp-arrow">→</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="invest-right reveal">
+
+          <div
+            style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(237,237,245,0.25); margin-bottom:24px;">
+            — Partnership Opportunities</div>
+
+          <div style="display:flex; flex-direction:column; gap:12px;">
+
+            <div
+              style="display:flex; align-items:center; gap:16px; padding:20px 24px; border:1px solid rgba(77,150,255,0.15); background:rgba(77,150,255,0.03); transition:background 0.2s, border-color 0.2s; cursor:default;"
+              onmouseover="this.style.background='rgba(77,150,255,0.07)'; this.style.borderColor='rgba(77,150,255,0.3)'"
+              onmouseout="this.style.background='rgba(77,150,255,0.03)'; this.style.borderColor='rgba(77,150,255,0.15)'">
+              <div style="font-size:22px;">🎵</div>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Music Licensing</div>
+                <div style="font-family:'DM Mono',monospace; font-size:10px; color:rgba(237,237,245,0.35);">License AI
+                  music for your content, brand or project</div>
+              </div>
+              <div style="color:var(--waves); font-size:14px;">→</div>
+            </div>
+
+            <div
+              style="display:flex; align-items:center; gap:16px; padding:20px 24px; border:1px solid rgba(255,107,107,0.15); background:rgba(255,107,107,0.03); transition:background 0.2s, border-color 0.2s; cursor:default;"
+              onmouseover="this.style.background='rgba(255,107,107,0.07)'; this.style.borderColor='rgba(255,107,107,0.3)'"
+              onmouseout="this.style.background='rgba(255,107,107,0.03)'; this.style.borderColor='rgba(255,107,107,0.15)'">
+              <div style="font-size:22px;">🤝</div>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Brand Sponsorships</div>
+                <div style="font-family:'DM Mono',monospace; font-size:10px; color:rgba(237,237,245,0.35);">Partner with
+                  Mbekilabs across our three channels</div>
+              </div>
+              <div style="color:var(--motion); font-size:14px;">→</div>
+            </div>
+
+            <div
+              style="display:flex; align-items:center; gap:16px; padding:20px 24px; border:1px solid rgba(107,203,119,0.15); background:rgba(107,203,119,0.03); transition:background 0.2s, border-color 0.2s; cursor:default;"
+              onmouseover="this.style.background='rgba(107,203,119,0.07)'; this.style.borderColor='rgba(107,203,119,0.3)'"
+              onmouseout="this.style.background='rgba(107,203,119,0.03)'; this.style.borderColor='rgba(107,203,119,0.15)'">
+              <div style="font-size:22px;">📚</div>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Content Collaboration</div>
+                <div style="font-family:'DM Mono',monospace; font-size:10px; color:rgba(237,237,245,0.35);">Co-create
+                  content with Mbeve Waves, Motion or Mind</div>
+              </div>
+              <div style="color:var(--mind); font-size:14px;">→</div>
+            </div>
+
+            <div
+              style="display:flex; align-items:center; gap:16px; padding:20px 24px; border:1px solid rgba(199,125,255,0.15); background:rgba(199,125,255,0.03); transition:background 0.2s, border-color 0.2s; cursor:default;"
+              onmouseover="this.style.background='rgba(199,125,255,0.07)'; this.style.borderColor='rgba(199,125,255,0.3)'"
+              onmouseout="this.style.background='rgba(199,125,255,0.03)'; this.style.borderColor='rgba(199,125,255,0.15)'">
+              <div style="font-size:22px;">💼</div>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:700; margin-bottom:3px;">Investment Conversations</div>
+                <div style="font-family:'DM Mono',monospace; font-size:10px; color:rgba(237,237,245,0.35);">Interested
+                  in what we are building? Let's talk.</div>
+              </div>
+              <div style="color:var(--royal); font-size:14px;">→</div>
+            </div>
+
+          </div>
+
+          <div
+            style="margin-top:24px; padding:24px; border:1px solid var(--border); background:var(--dim2); text-align:center;">
+            <div
+              style="font-family:'DM Mono',monospace; font-size:10px; color:rgba(237,237,245,0.25); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:10px;">
+              Ready to connect?</div>
+            <a href="#contact"
+              style="font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--black); background:var(--white); padding:12px 28px; text-decoration:none; display:inline-block; transition:opacity 0.2s;"
+              onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+              Get In Touch →
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT ========== -->
+  <section id="contact" style="max-width:1100px; margin:0 auto; padding:120px 40px;">
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <div class="section-tag">Contact</div>
+        <h2 class="section-title">Let's Build<br />Something.</h2>
+        <p class="section-body">Whether you're a brand, creator, investor or just someone who believes in what AI can
+          create — we want to hear from you.</p>
+
+        <div class="contact-links">
+          <a href="#" class="contact-link">
+            <div>
+              <div class="contact-link-name">YouTube</div>
+              <div class="contact-link-handle">@mbekilabs</div>
+            </div>
+            <div class="contact-link-arrow">↗</div>
+          </a>
+          <a href="#" class="contact-link">
+            <div>
+              <div class="contact-link-name">TikTok</div>
+              <div class="contact-link-handle">@mbekilabs</div>
+            </div>
+            <div class="contact-link-arrow">↗</div>
+          </a>
+          <a href="#" class="contact-link">
+            <div>
+              <div class="contact-link-name">Instagram</div>
+              <div class="contact-link-handle">@mbekilabs</div>
+            </div>
+            <div class="contact-link-arrow">↗</div>
+          </a>
+          <a href="mailto:mbekilabsofficial@gmail.com" class="contact-link">
+            <div>
+              <div class="contact-link-name">Email</div>
+              <div class="contact-link-handle">mbekilabsofficial@gmail.com</div>
+            </div>
+            <div class="contact-link-arrow">↗</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-right reveal">
+        <div class="contact-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input type="text" id="firstName" class="form-input" placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input type="text" id="lastName" class="form-input" placeholder="Your surname">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="emailAddress" class="form-input" placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">I am reaching out as a</label>
+            <select id="inquiryType" class="form-select">
+              <option>Brand / Sponsor</option>
+              <option>Investor</option>
+              <option>Creator / Collaborator</option>
+              <option>Music Licensing</option>
+              <option>General Enquiry</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <textarea id="messageBody" class="form-textarea"
+              placeholder="Tell us about your idea, opportunity or question..."></textarea>
+          </div>
+          <!-- Inline form feedback message -->
+          <div id="formFeedback"
+            style="display:none; font-family:'DM Mono',monospace; font-size:12px; padding:14px 16px; border:1px solid; letter-spacing:0.05em;">
+          </div>
+          <button type="button" class="form-submit" id="submitBtn" onclick="handleSubmit()">Send Message →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-logo">MBEKILABS</span>
+        <p class="footer-tagline">One label. Three channels. Infinite output. Rooted in African culture. Built for the
+          world. — and everything that comes after it.</p>
+        <div class="footer-social">
+          <a href="https://youtube.com/@mbevewaves" class="social-link" target="_blank">YT</a>
+          <a href="https://tiktok.com/@mbekilabs" class="social-link" target="_blank">TT</a>
+          <a href="https://instagram.com/mbekilabs" class="social-link" target="_blank">IG</a>
+          <a href="https://x.com/mbekilabs" class="social-link" target="_blank">X</a>
+          <a href="https://linkedin.com/company/mbekilabs" class="social-link" target="_blank">IN</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Channels</div>
+        <div class="footer-links">
+          <a href="#channels" class="footer-link">🎵 Mbeve Waves</a>
+          <a href="#channels" class="footer-link">🎬 Mbeve Motion</a>
+          <a href="#channels" class="footer-link">📚 Mbeve Mind</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Company</div>
+        <div class="footer-links">
+          <a href="#about" class="footer-link">About</a>
+          <a href="#roadmap" class="footer-link">Roadmap</a>
+          <a href="#invest" class="footer-link">Invest</a>
+          <a href="#contact" class="footer-link">Contact</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Use</a>
+          <a href="#" class="footer-link">Licensing Terms</a>
+          <a href="#" class="footer-link">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Mbekilabs. All rights reserved.</div>
+      <div class="footer-motto">The strategy stays. The tools evolve. 🔺</div>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top = mouseY + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, .channel-card, .timeline-year').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '16px';
+        cursor.style.height = '16px';
+        ring.style.width = '52px';
+        ring.style.height = '52px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '8px';
+        cursor.style.height = '8px';
+        ring.style.width = '36px';
+        ring.style.height = '36px';
+      });
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Roadmap tabs
+    function showYear(index) {
+      document.querySelectorAll('.timeline-year').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+      document.querySelectorAll('.roadmap-panel').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+    }
+
+    // Mobile nav
+    function toggleMobileNav() {
+      const nav = document.getElementById('mobileNav');
+      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      nav.style.borderBottomColor = window.scrollY > 50
+        ? 'rgba(237,237,245,0.1)'
+        : 'rgba(237,237,245,0.08)';
+    });
+
+    // =============================================
+    // EMAILJS CONFIGURATION
+    // To activate: replace the three placeholder
+    // values below with your real EmailJS keys.
+    // Sign up free at https://emailjs.com
+    // =============================================
+    const EMAILJS_PUBLIC_KEY = 'yXFo9KNfplZtBCeyG';
+    const EMAILJS_SERVICE_ID = 'service_w6q2oo2';
+    const EMAILJS_TEMPLATE_ID = 'template_75w229o';
+
+    // Initialise EmailJS
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+    console.log('EmailJS initialized', typeof emailjs !== 'undefined' ? 'OK' : 'MISSING');
+
+    // Form validation helper
+    function validateForm(first, email, message) {
+      if (!first.trim()) return 'Please enter your first name.';
+      if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+        return 'Please enter a valid email address.';
+      if (!message.trim() || message.trim().length < 10)
+        return 'Please write a message (at least 10 characters).';
+      return null;
+    }
+
+    // Show inline feedback
+    function showFeedback(type, message) {
+      const fb = document.getElementById('formFeedback');
+      fb.style.display = 'block';
+      fb.textContent = message;
+      if (type === 'success') {
+        fb.style.borderColor = 'rgba(107,203,119,0.4)';
+        fb.style.background = 'rgba(107,203,119,0.06)';
+        fb.style.color = 'var(--mind)';
+      } else if (type === 'error') {
+        fb.style.borderColor = 'rgba(255,107,107,0.4)';
+        fb.style.background = 'rgba(255,107,107,0.06)';
+        fb.style.color = 'var(--motion)';
+      } else {
+        fb.style.borderColor = 'rgba(237,237,245,0.12)';
+        fb.style.background = 'rgba(237,237,245,0.03)';
+        fb.style.color = 'rgba(237,237,245,0.5)';
+      }
+    }
+
+    // Main submit handler
+    async function handleSubmit() {
+      const btn = document.getElementById('submitBtn');
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const email = document.getElementById('emailAddress').value;
+      const inquiry = document.getElementById('inquiryType').value;
+      const message = document.getElementById('messageBody').value;
+
+      // Validate
+      const validationError = validateForm(firstName, email, message);
+      if (validationError) {
+        showFeedback('error', '⚠ ' + validationError);
+        return;
+      }
+
+      // Loading state
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+      showFeedback('info', 'Sending your message — please wait...');
+
+      // Ensure EmailJS is loaded before attempting send
+      if (!window.emailjs || typeof emailjs.send !== 'function') {
+        console.error('EmailJS is not loaded or send() is unavailable:', window.emailjs);
+        showFeedback('error', '✕ Email service is unavailable right now. Please email us directly at mbekilabsofficial@gmail.com.');
+        btn.textContent = 'Send Message →';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        return;
+      }
+
+      // Check if keys are still placeholders
+      if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
+        // Demo mode — simulates success for testing
+        setTimeout(() => {
+          showFeedback('success', '✓ Message sent! (Demo mode — add your EmailJS keys to go live.)');
+          btn.textContent = 'Message Sent ✓';
+          btn.style.background = 'var(--mind)';
+          btn.style.color = 'var(--black)';
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          // Clear fields
+          ['firstName', 'lastName', 'emailAddress', 'messageBody'].forEach(id => {
+            document.getElementById(id).value = '';
+          });
+          setTimeout(() => {
+            btn.textContent = 'Send Message →';
+            btn.style.background = 'var(--white)';
+            document.getElementById('formFeedback').style.display = 'none';
+          }, 5000);
+        }, 1200);
+        return;
+      }
+
+      // Live EmailJS send
+      console.log('EmailJS send start', {
+        serviceId: EMAILJS_SERVICE_ID,
+        templateId: EMAILJS_TEMPLATE_ID,
+        publicKey: EMAILJS_PUBLIC_KEY,
+        templateParams: {
+          from_name: firstName + ' ' + lastName,
+          from_email: email,
+          inquiry_type: inquiry,
+          message: message,
+          reply_to: email,
+          to_name: 'Mbekilabs',
+        },
+      });
+
+      const templateParams = {
+        from_name: firstName + ' ' + lastName,
+        from_email: email,
+        inquiry_type: inquiry,
+        message: message,
+        reply_to: email,
+        to_name: 'Mbekilabs',
+      };
+
+      try {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+        showFeedback('success', '✓ Message sent! We will get back to you within 48 hours.');
+        btn.textContent = 'Message Sent ✓';
+        btn.style.background = 'var(--mind)';
+        btn.style.color = 'var(--black)';
+        ['firstName', 'lastName', 'emailAddress', 'messageBody'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+        setTimeout(() => {
+          btn.textContent = 'Send Message →';
+          btn.style.background = 'var(--white)';
+          btn.style.color = 'var(--black)';
+          document.getElementById('formFeedback').style.display = 'none';
+        }, 6000);
+      } catch (err) {
+        console.error('EmailJS error:', err);
+        const errMsg = err && (err.message || err.statusText || JSON.stringify(err));
+        showFeedback('error', '✕ Email send failed: ' + (errMsg || 'Please email us directly at mbekilabsofficial@gmail.com'));
+        btn.textContent = 'Send Message →';
+      } finally {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      }
+    }
+
+    // Smooth active nav link highlighting
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        if (window.scrollY >= section.offsetTop - 100) {
+          current = section.id;
+        }
+      });
+      navLinks.forEach(link => {
+        link.style.color = link.getAttribute('href') === '#' + current
+          ? 'rgba(237,237,245,0.9)'
+          : 'rgba(237,237,245,0.4)';
+      });
+    });
+  </script>
+</body>
+
+</html>
