@@ -1620,8 +1620,9 @@
     <a href="#home" class="nav-logo">MBEKILABS</a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
-      <li><a href="#channels">Channels</a></li>
-      <li><a href="#roadmap">Vision</a></li>
+      <li><a href="waves.html">🎵 Waves</a></li>
+      <li><a href="motion.html">🎬 Motion</a></li>
+      <li><a href="mind.html">📚 Mind</a></li>
       <li><a href="#invest">Invest</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -1634,10 +1635,12 @@
     style="display:none; position:fixed; inset:0; background:rgba(7,7,15,0.97); z-index:999; flex-direction:column; justify-content:center; align-items:center; gap:32px;">
     <a href="#about" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
       onclick="toggleMobileNav()">About</a>
-    <a href="#channels" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
-      onclick="toggleMobileNav()">Channels</a>
-    <a href="#roadmap" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
-      onclick="toggleMobileNav()">Vision</a>
+    <a href="waves.html" style="font-size:28px; font-weight:800; color:#4d96ff; text-decoration:none;"
+      onclick="toggleMobileNav()">🎵 Waves</a>
+    <a href="motion.html" style="font-size:28px; font-weight:800; color:#ff6b6b; text-decoration:none;"
+      onclick="toggleMobileNav()">🎬 Motion</a>
+    <a href="mind.html" style="font-size:28px; font-weight:800; color:#6bcb77; text-decoration:none;"
+      onclick="toggleMobileNav()">📚 Mind</a>
     <a href="#invest" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
       onclick="toggleMobileNav()">Invest</a>
     <a href="#contact" style="font-size:28px; font-weight:800; color:var(--white); text-decoration:none;"
@@ -1772,7 +1775,7 @@
 
     <div class="channels-grid">
       <!-- Mbeve Waves -->
-      <div class="channel-card waves reveal">
+      <div class="channel-card waves reveal" onclick="window.location='waves.html'" style="cursor:pointer;">
         <div class="channel-bg-letter">MMW</div>
         <span class="channel-icon">🎵</span>
         <div class="channel-name">Mbeve Waves</div>
@@ -1794,7 +1797,7 @@
       </div>
 
       <!-- Mbeve Motion -->
-      <div class="channel-card motion reveal">
+      <div class="channel-card motion reveal" onclick="window.location='motion.html'" style="cursor:pointer;">
         <div class="channel-bg-letter">MM</div>
         <span class="channel-icon">🎬</span>
         <div class="channel-name">Mbeve Motion</div>
@@ -1816,7 +1819,7 @@
       </div>
 
       <!-- Mbeve Mind -->
-      <div class="channel-card mind reveal">
+      <div class="channel-card mind reveal" onclick="window.location='mind.html'" style="cursor:pointer;">
         <div class="channel-bg-letter">E</div>
         <span class="channel-icon">📚</span>
         <div class="channel-name">Mbeve Mind</div>
@@ -2126,7 +2129,7 @@
           <div id="formFeedback"
             style="display:none; font-family:'DM Mono',monospace; font-size:12px; padding:14px 16px; border:1px solid; letter-spacing:0.05em;">
           </div>
-          <button type="button" class="form-submit" id="submitBtn" onclick="handleSubmit()">Send Message →</button>
+          <button class="form-submit" id="submitBtn" onclick="handleSubmit()">Send Message →</button>
         </div>
       </div>
     </div>
@@ -2140,30 +2143,30 @@
         <p class="footer-tagline">One label. Three channels. Infinite output. Rooted in African culture. Built for the
           world. — and everything that comes after it.</p>
         <div class="footer-social">
-          <a href="https://youtube.com/@mbevewaves" class="social-link" target="_blank">YT</a>
-          <a href="https://tiktok.com/@mbekilabs" class="social-link" target="_blank">TT</a>
-          <a href="https://instagram.com/mbekilabs" class="social-link" target="_blank">IG</a>
-          <a href="https://x.com/mbekilabs" class="social-link" target="_blank">X</a>
-          <a href="https://linkedin.com/company/mbekilabs" class="social-link" target="_blank">IN</a>
+          <a rel="noopener" href="https://youtube.com/@mbevewaves" class="social-link" target="_blank">YT</a>
+          <a rel="noopener" href="https://tiktok.com/@mbekilabs" class="social-link" target="_blank">TT</a>
+          <a rel="noopener" href="https://instagram.com/mbekilabs" class="social-link" target="_blank">IG</a>
+          <a rel="noopener" href="https://x.com/mbekilabs" class="social-link" target="_blank">X</a>
+          <a rel="noopener" href="https://linkedin.com/company/mbekilabs" class="social-link" target="_blank">IN</a>
         </div>
       </div>
 
       <div>
         <div class="footer-col-title">Channels</div>
         <div class="footer-links">
-          <a href="#channels" class="footer-link">🎵 Mbeve Waves</a>
-          <a href="#channels" class="footer-link">🎬 Mbeve Motion</a>
-          <a href="#channels" class="footer-link">📚 Mbeve Mind</a>
+          <a rel="noopener" href="https://youtube.com/@mbevewaves" class="footer-link">🎵 Mbeve Waves</a>
+          <a rel="noopener" href="https://youtube.com/@mbevemotion" class="footer-link">🎬 Mbeve Motion</a>
+          <a rel="noopener" href="https://youtube.com/@mbevemind" class="footer-link">📚 Mbeve Mind</a>
         </div>
       </div>
 
       <div>
         <div class="footer-col-title">Company</div>
         <div class="footer-links">
-          <a href="#about" class="footer-link">About</a>
-          <a href="#roadmap" class="footer-link">Roadmap</a>
-          <a href="#invest" class="footer-link">Invest</a>
-          <a href="#contact" class="footer-link">Contact</a>
+          <a rel="noopener" href="#about" class="footer-link">About</a>
+          <a rel="noopener" href="#roadmap" class="footer-link">Roadmap</a>
+          <a rel="noopener" href="#invest" class="footer-link">Invest</a>
+          <a rel="noopener" href="#contact" class="footer-link">Contact</a>
         </div>
       </div>
 
@@ -2270,6 +2273,18 @@
     // Initialise EmailJS
     emailjs.init(EMAILJS_PUBLIC_KEY);
     console.log('EmailJS initialized', typeof emailjs !== 'undefined' ? 'OK' : 'MISSING');
+
+    // Runtime checks: detect file:// protocol and offline state
+    const isFileProtocol = window.location.protocol === 'file:';
+    const isOnline = navigator.onLine;
+    if (isFileProtocol) {
+      console.warn('EmailJS running under file:// protocol - some features may be restricted');
+      showFeedback('info', '⚠ Running locally - EmailJS features may be limited. Deploy to a web server for full functionality.');
+    }
+    if (!isOnline) {
+      console.warn('Network appears to be offline');
+      showFeedback('info', '⚠ You appear to be offline. Check your internet connection.');
+    }
 
     // Form validation helper
     function validateForm(first, email, message) {
@@ -2386,8 +2401,12 @@
         btn.textContent = 'Message Sent ✓';
         btn.style.background = 'var(--mind)';
         btn.style.color = 'var(--black)';
-        ['firstName', 'lastName', 'emailAddress', 'messageBody'].forEach(id => {
-          document.getElementById(id).value = '';
+        ['firstName', 'lastName', 'emailAddress', 'inquiryType', 'messageBody'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            if (el.tagName === 'SELECT') el.selectedIndex = 0;
+            else el.value = '';
+          }
         });
         setTimeout(() => {
           btn.textContent = 'Send Message →';
@@ -2398,7 +2417,14 @@
       } catch (err) {
         console.error('EmailJS error:', err);
         const errMsg = err && (err.message || err.statusText || JSON.stringify(err));
-        showFeedback('error', '✕ Email send failed: ' + (errMsg || 'Please email us directly at mbekilabsofficial@gmail.com'));
+        let errorMsg = '✕ Email send failed: ' + (errMsg || 'Please email us directly at mbekilabsofficial@gmail.com');
+        if (isFileProtocol) {
+          errorMsg += ' | Tip: Running locally (file://) - deploy to a web server to send emails.';
+        }
+        if (!isOnline) {
+          errorMsg += ' | Tip: You appear offline - check internet and try again.';
+        }
+        showFeedback('error', errorMsg);
         btn.textContent = 'Send Message →';
       } finally {
         btn.disabled = false;
